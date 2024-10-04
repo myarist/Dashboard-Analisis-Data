@@ -273,7 +273,6 @@ if st.session_state.logged_in:
     )
     
     if pg != eda:
-        st.session_state.back_selected_columns = st.session_state.selected_columns
         st.session_state.back_viz_type = st.session_state.viz_type
         st.session_state.back_x_col = st.session_state.x_col
         st.session_state.back_y_col = st.session_state.y_col
