@@ -45,7 +45,7 @@ def set_state(i):
 @st.fragment
 def baca_data(filter_kolom=False, selected_columns=None):
     if st.session_state.dataset:
-        df = pd.read_csv(os.path.join('data', st.session_state.dataset), encoding='ISO-8859-1', nrows=10)
+        df = pd.read_csv(os.path.join('data', st.session_state.dataset), encoding='ISO-8859-1')
 
         if filter_kolom and selected_columns:
             df_filtered = df[st.session_state.selected_columns]  

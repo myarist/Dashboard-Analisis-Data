@@ -13,8 +13,6 @@ st.markdown(
             overflow-y: hidden; 
         }
 
-        
-
         .stSidebarNav [data-testid="stSidebarNav"] {
             height: 200px;
             padding-top: 1rem;
