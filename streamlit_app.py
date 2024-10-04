@@ -2,8 +2,11 @@ import streamlit as st
 
 from functions import *
 
-st.set_page_config(page_title="Dashboard Analisis Data", page_icon='assets/Logo.png',layout="wide")
-st.logo('assets/Logo + Text H.png', icon_image='assets/Logo + Text H.png')
+if 'sidebar_status' not in st.session_state:
+    st.session_state.sidebar_status = 'auto' 
+
+st.set_page_config(page_title="Dashboard Analisis Data", page_icon='assets/Logo.png', layout="wide", initial_sidebar_state=st.session_state.sidebar_status)
+st.logo('assets/Logo Long.png', icon_image='assets/Logo Short.png')
 
 st.markdown(
     """

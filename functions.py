@@ -12,7 +12,7 @@ def login():
         st.image('assets/Login.png', width=600, use_column_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
     col4, col5, col6 = st.columns([1, 1, 1])
-    if col5.button("Mari Kita Mulai", use_container_width=True):
+    if col2.button("Mari Kita Mulai", use_container_width=True):
         st.session_state.logged_in = True
         col2.empty()
         col5.empty()
