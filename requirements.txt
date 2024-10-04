@@ -1,6 +1,5 @@
 matplotlib==3.8.0
-numpy==1.25.2
 pandas==2.1.4
-seaborn==0.13.0
+plotly
 streamlit==1.39.0
 setuptools==75.1.0
