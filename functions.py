@@ -4,63 +4,94 @@ import streamlit as st
 import time
 import plotly.express as px
 
+if 'selected_dataset' not in st.session_state:
+    st.session_state.selected_dataset = None
+
+@st.dialog("Pilih Data", width = "small")
+def choose_data():
+    dataset_files = [file for file in os.listdir('data') if file.endswith('.csv')]
+
+    st.session_state.selected_dataset = st.selectbox(
+        "Pilih Salah Satu Data",
+        dataset_files,
+        index=None,
+        placeholder="Silakan pilih dataset..."
+    )
+
+    if st.session_state.selected_dataset != None and st.button("Pilih", use_container_width=True):
+            st.session_state.logged_in = True
+            time.sleep(1)
+            st.rerun()
+
 @st.fragment
 def login():
-    col1, col2, col3 = st.columns([1, 1.3, 1])
+    col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         st.markdown("<div style='height: 10vh; display: flex; align-items: center; justify-content: center;'>", unsafe_allow_html=True)
         st.image('assets/Login.png', width=600, use_column_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-    col4, col5, col6 = st.columns([1, 1, 1])
-    if col2.button("Mari Kita Mulai", use_container_width=True):
-        st.session_state.logged_in = True
-        col2.empty()
-        col5.empty()
-        time.sleep(1)
-        st.rerun()
+    col4, col5, col6 = st.columns([1, 0.5, 1])
+    col5.button("Mari Kita Mulai", on_click=choose_data, use_container_width=True)
 
 def logout():
     st.session_state.logged_in = False
-    st.session_state.chat1 = False
+    st.session_state.sampled_dataset = False
+    st.session_state.filtered_dataset = False
+    st.session_state.selected_dataset = None
+    st.session_state.clicked_sample_data = False
+    st.session_state.clicked_button_data = False 
     st.rerun()
 
-def stream_data_fast(teks):
-    for char in teks:
-        yield char
-        time.sleep(0.001)
-
-def stream_data_medium(teks):
-    for char in teks:
-        yield char
-        time.sleep(0.01)
-
-def stream_data_slow(teks):
-    for char in teks:
-        yield char
-        time.sleep(0.1)
-
-def set_state(i):
-    st.session_state.stage = i
-
 @st.fragment
-def baca_data(filter_kolom=False, selected_columns=None):
-    if st.session_state.dataset:
-        df = pd.read_csv(os.path.join('data', st.session_state.dataset), encoding='ISO-8859-1')
+def baca_data():
+    if st.session_state.selected_dataset != None:
+        df = pd.read_csv(os.path.join('data', st.session_state.selected_dataset), encoding='ISO-8859-1')
 
-        if filter_kolom and selected_columns:
+        if st.session_state.filtered_dataset:
             df_filtered = df[st.session_state.selected_columns]  
         else:
             df_filtered = df
 
-        st.dataframe(df_filtered, use_container_width=True)
+        if st.session_state.sampled_dataset:
+            df_sampled  = df_filtered.sample(n=st.session_state.sampled_sum, random_state=42).sort_index()
+        else:
+            df_sampled  = df_filtered
+            
     else:
-        df = None
+        df_sampled = None
 
-    return df
+    return df_sampled
+
+@st.fragment
+def sample_data():
+    df = pd.read_csv(os.path.join('data', st.session_state.selected_dataset))
+
+    jumlah_baris_awal = len(df)
+
+    jumlah_baris_akhir = st.slider(
+        "Atur Banyaknya Data yang Akan Digunakan",
+        min_value=1000,
+        max_value=jumlah_baris_awal,
+        value=jumlah_baris_awal,
+        step=100,
+    )
+
+    st.session_state.sampled_sum = jumlah_baris_akhir
+
+    if jumlah_baris_akhir == jumlah_baris_awal:
+        label_sampel = "Semua"
+        st.session_state.sampled_dataset = False
+    else:
+        label_sampel = f"{jumlah_baris_akhir:,.0f}".replace(",", ".")
+        st.session_state.sampled_dataset = True
+
+    if st.button(f"Gunakan {label_sampel} Data", use_container_width=True):
+        st.session_state.clicked_sample_data = True
+        st.rerun()
 
 @st.fragment
 def deskripsi_data():
-    data = st.session_state.dataset
+    data = st.session_state.selected_dataset
 
     if data:
         tab1, tab2, tab3 = st.tabs([f"Apa itu data {data}?", "Bagaimana struktur datasetnya?", "Dari mana sumbernya?"])

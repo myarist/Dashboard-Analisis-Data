@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_js_eval import streamlit_js_eval
+from streamlit_js_eval import streamlit_js_eval # type: ignore
 
 from functions import *
 
@@ -21,29 +21,22 @@ st.markdown(
     </style>
 """, unsafe_allow_html=True)
 
-if st.session_state.selected_dataset == None:
+if 'clicked_sample_data' not in st.session_state:
+    st.session_state.clicked_sample_data = False 
+
+st.session_state.filtered_dataset = False
+data_intro = baca_data()
+
+if not st.session_state.clicked_sample_data:
     col1, col2, col3 = st.columns([1, 1.8, 1])
     with col2:
         st.markdown("<div style='height: 10vh; display: flex; align-items: center; justify-content: center;'>", unsafe_allow_html=True)
         st.image('assets/Mengenal Data.png', width=600, use_column_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
-    def buka_sidebar():
-        st.session_state.sidebar_status = 'expanded'
-    
-    tombol_placeholder = st.empty()
-
-    lebar_layar = streamlit_js_eval(js_expressions='screen.width')
-    time.sleep(2)
-
-    if lebar_layar < 767:
-        with tombol_placeholder.container():
-            col4, col5, col6 = st.columns([1, 1, 1])
-            col5.button("Pilih Dataset", on_click=buka_sidebar, use_container_width=True)
-
 else:
     placeholder = st.container()
     deskripsi_data()
 
     with placeholder.container():
-        baca_data()
+        st.dataframe(data_intro, use_container_width=True)
