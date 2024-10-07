@@ -65,25 +65,25 @@ else:
 
 
         # Hitung rata-rata penyewaan per musim
-        avg_rentals_per_season = data_dashboard.groupby("season")["cnt"].mean()
+        avg_rentals_per_season = data_dashboard.groupby("season")["cnt"].mean() # type: ignore
 
         # Buat bar chart
         st.bar_chart(avg_rentals_per_season)
 
 
 
-        daily_rentals = data_dashboard.groupby('dteday')['cnt'].sum()
+        daily_rentals = data_dashboard.groupby('dteday')['cnt'].sum() # type: ignore
         st.area_chart(daily_rentals)
 
 
-        hourly_avg = data_dashboard.groupby('hr')['cnt'].mean()
+        hourly_avg = data_dashboard.groupby('hr')['cnt'].mean() # type: ignore
         st.bar_chart(hourly_avg)
 
 
-        st.line_chart(data_dashboard[['temp', 'cnt']])
+        st.line_chart(data_dashboard[['temp', 'cnt']]) # type: ignore
 
 
-        st.scatter_chart(data_dashboard[['temp', 'cnt']])
+        st.scatter_chart(data_dashboard[['temp', 'cnt']]) # type: ignore
 
 
         import plotly.express as px

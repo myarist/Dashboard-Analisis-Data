@@ -29,7 +29,7 @@ st.markdown(
 
         .stTabs [data-baseweb="tab"] {
             flex: 1; 
-            height: 0px;
+            height: 50px;
             border-radius: 4px 4px 0px 0px;
             gap: 1px;
             padding-top: 5px;
